@@ -13,7 +13,7 @@ How amazing is that. Just open the app and start typing. Plus you can tweak the 
     <li>
         <h4>Write</h4>
         <figure>
-        <img src="C:\Users\ayush.kumar.a.singh\Documents\venv\pictures\write tab.jpg" alt="Write Tab">
+        <img src="pictures\write tab.jpg" alt="Write Tab">
         <figcaption>Fig.1 - Write Tab</figcaption>
         </figure>
         <p>Select the date you want to write memoir for (by default, the current date is chosen). Click </b>'Preview'</b> to see how the final memoir looks and click <b>'Save'</b> to save the deed. Same memoir can't be saved for the same day, but that can be disabled in the settings, so cheers.</p>
@@ -21,7 +21,7 @@ How amazing is that. Just open the app and start typing. Plus you can tweak the 
     <li>
         <h4>Read</h4>
         <figure>
-        <img src="C:\Users\ayush.kumar.a.singh\Documents\venv\pictures\read tab.jpg" alt="Read Tab">
+        <img src="pictures\read tab.jpg" alt="Read Tab">
         <figcaption>Fig.2 - Read Tab</figcaption>
         </figure>
         <p>Select the range in terms of date you want to read memoirs for. For a single date, choose the start and end date the same. The memoirs in that date range are shown in the output box below. By default, only the first 20 records are shown to avoid clutter, but that limit can be changed from the settings.</p>
@@ -29,7 +29,7 @@ How amazing is that. Just open the app and start typing. Plus you can tweak the 
     <li>
         <h4>Delete</h4>
         <figure>
-        <img src="C:\Users\ayush.kumar.a.singh\Documents\venv\pictures\delete tab.jpg" alt="Delete Tab">
+        <img src="pictures\delete tab.jpg" alt="Delete Tab">
         <figcaption>Fig.1 - Delete Tab</figcaption>
         </figure>
         <p>You can either delete all the memoirs, by selecting <b>'Delete All'</b> or those in a selected date range. Clicking the <b>'Deletion Preview'</b> button shows the records that will be deleted. Click on <b>'Delete Records'</b> to delete. A popup asks if you are sure, selecting 'OK' permanently deletes the records and 'Cancel' cancels deletion. Pretty straight forward. (Moving to Bin is not an option right now but is on my bucket list)</p>
@@ -37,7 +37,7 @@ How amazing is that. Just open the app and start typing. Plus you can tweak the 
     <li>
         <h4>Settings</h4>
         <figure>
-        <img src="C:\Users\ayush.kumar.a.singh\Documents\venv\pictures\settings tab.jpg" alt="Settings Tab">
+        <img src="pictures\settings tab.jpg" alt="Settings Tab">
         <figcaption>Fig.1 - Settings Tab</figcaption>
         </figure>
         <p>Tweak the program as per your liking. Options available right now include:
@@ -49,6 +49,8 @@ How amazing is that. Just open the app and start typing. Plus you can tweak the 
                 <li><u>Tab Selected color:</u> Color of the tab when it is selected. By default, it is Blue. Only a few other colors are supported at this moment, and inclusion of a simple color picker is on the way.</li>
                 <li><u>Max records to display in preview:</u> Max number of records that are displayed in any preview. By default, it is set to 20.</li>
             <ol>
+        </p>
+        <p>
         All the changes take effect on restarting the app. A <b>'Reset settings'</b> button is available to reset the settings back to default. Neat.
         </p>
     </li>
