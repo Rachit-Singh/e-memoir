@@ -30,7 +30,7 @@ How amazing is that. Just open the app and start typing. Plus you can tweak the 
         <h4>Delete</h4>
         <figure>
         <img src="pictures\delete tab.jpg" alt="Delete Tab">
-        <figcaption>Fig.1 - Delete Tab</figcaption>
+        <center><figcaption>Fig.3 - Delete Tab</figcaption></center>
         </figure>
         <p>You can either delete all the memoirs, by selecting <b>'Delete All'</b> or those in a selected date range. Clicking the <b>'Deletion Preview'</b> button shows the records that will be deleted. Click on <b>'Delete Records'</b> to delete. A popup asks if you are sure, selecting 'OK' permanently deletes the records and 'Cancel' cancels deletion. Pretty straight forward. (Moving to Bin is not an option right now but is on my bucket list)</p>
     </li>
@@ -38,7 +38,7 @@ How amazing is that. Just open the app and start typing. Plus you can tweak the 
         <h4>Settings</h4>
         <figure>
         <img src="pictures\settings tab.jpg" alt="Settings Tab">
-        <figcaption>Fig.1 - Settings Tab</figcaption>
+            <center><figcaption>Fig.4 - Settings Tab</figcaption></center>
         </figure>
         <p>Tweak the program as per your liking. Options available right now include:
             <ol>
