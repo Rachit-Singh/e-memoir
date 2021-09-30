@@ -33,6 +33,10 @@ def read_settings(reset=False) :
             {
                 "max_records_to_display" : 20,
                 "_comment_" : "max number of records to be displayed in preview"
+            },
+            {
+                "theme" : "Dark",
+                "_comment_" : "theme of the GUI"
             }
         ]
         with open("settings.json", "w") as f:
@@ -193,9 +197,10 @@ def update_settings(window, event, values, settings, temp_dic) :
         settings[0]['force_save'] = values['TRUE1']
         settings[1]['quit_after_saving_memoir'] = values['TRUE2']
         settings[1]['delay'] = int(values['_delay_'])
-        settings[2]['tab_selected_color'] = values['_tab_selected_color_']
+        settings[2]['tab_selected_color'] = values['color-text']
         settings[3]['date_format'] = values['_date_format_']
         settings[4]["max_records_to_display"] = values['_limit_']
+        settings[5]['theme'] = values['_theme_']
 
         # overwriting the settings file
         with open("settings.json", "w") as f:
@@ -211,12 +216,48 @@ def update_settings(window, event, values, settings, temp_dic) :
         window['FALSE1'].update(value=True)
         window['FALSE2'].update(value=True)
         window['_delay_'].update(2)
-        window['_tab_selected_color_'].update('Blue')
+        window['-color-'].update(button_color=('White', 'Blue'))
         window['_date_format_'].update('28-November-1999')
         window['_limit_'].update(20)
+        window['_theme_'].update('Dark')
 
         # reset the settings file as well
         read_settings(reset=True)
         window['_status_'].update("Settings reset successfully. Restart the app to see the effects.")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+## CREATE A NEW WINDOW SHOWING ALL THE THEMES SUPPORTED
+def themes_preview_fn():
+    columns = 12 #default input for the function.
+    #Body of the altered preview_all_look_and_feel_themes function
+
+    # Show a "splash" type message so the user doesn't give up waiting
+    sg.popup_quick_message('Hang on for a moment, this will take a bit to create....', background_color='red', text_color='#FFFFFF', auto_close=True, non_blocking=True)
+    web = False
+    win_bg = 'black'
+
+    def sample_layout():
+        return [[sg.Text('Text element'), sg.InputText('Input data here', size=(10, 1))],
+                [sg.Button('Ok'), sg.Button('Cancel'), sg.Slider((1, 10), orientation='h', size=(5, 15))]]
+
+    layout2 = [[sg.Text('Here is a complete list of themes', font='Default 18', background_color=win_bg)]]
+
+    names = sg.list_of_look_and_feel_values()
+    names.sort()
+    column_layout = [] #new list to make the column element
+    row = []
+    for count, theme in enumerate(names):
+        sg.change_look_and_feel(theme)
+        if not count % columns:
+            column_layout += [row] #rather than layout += [row]
+            row = []
+        row += [sg.Frame(theme, sample_layout() if not web else [[sg.T(theme)]] + sample_layout())]
+    if row:
+        column_layout += [row] #rather than layout += [row]
+
+    layout2 += [[sg.Column(column_layout, scrollable=True)]] #add column element
+    window2 = sg.Window('Preview of all Look and Feel choices', layout2, background_color=win_bg,
+                    resizable=True, icon=os.path.join('Src', 'themes.ico')) #make window resizable
+    window2.read()
+    window2.close()
