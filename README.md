@@ -47,6 +47,10 @@ How amazing is that. Just open the app and start typing. Plus you can tweak the 
         <img src="pictures\settings tab.jpg" alt="Settings Tab">
             <figcaption>Fig.4 - Settings Tab</figcaption>
         </figure>
+        <figure>
+        <img src="pictures\theme previewer.jpg" alt="Settings Tab">
+            <figcaption>Fig.5 - Theme Previewer</figcaption>
+        </figure>
         </center>
         <p>Tweak the program as per your liking. Options available right now include:
             <ol>
