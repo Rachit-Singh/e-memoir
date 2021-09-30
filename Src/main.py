@@ -82,7 +82,7 @@ if __name__ == "__main__" :
                         border_width=5), sg.Button('Close')]]  
 
     #Define Window
-    window =sg.Window("E-Memoir",tabgrp)   
+    window =sg.Window("E-Memoir",tabgrp, icon=r"C:\Users\ayush.kumar.a.singh\Documents\venv\Src\icon.ico")   
 
     while True:             # Event Loop
         event, values = window.Read()      
