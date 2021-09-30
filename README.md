@@ -48,8 +48,8 @@ How amazing is that. Just open the app and start typing. Plus you can tweak the 
             <figcaption>Fig.4 - Settings Tab</figcaption>
         </figure>
         <figure>
-        <img src="pictures\theme previewer.jpg" alt="Settings Tab">
-            <figcaption>Fig.5 - Theme Previewer</figcaption>
+        <img src="pictures\theme previewer.jpg" alt="Themes Preview">
+            <figcaption>Fig.5 - Themes Preview</figcaption>
         </figure>
         </center>
         <p>Tweak the program as per your liking. Options available right now include:
@@ -60,7 +60,7 @@ How amazing is that. Just open the app and start typing. Plus you can tweak the 
                 <li><u>Date format:</u> The date format used for dates for tagging the memoirs. A single date format is used for the whole memoir. By default, it is set to '28-November-1999' format. If the format is changed, the change is made in all the dates for all the memoirs and the UI as well. Sweet.</li>
                 <li><u>Tab Selected color:</u> Color of the tab when it is selected. By default, it is Blue. A complete color palette is provided</li>
                 <li><u>Max records to display in preview:</u> Max number of records that are displayed in any preview. By default, it is set to 20.</li>
-                <li><u>Theme:</u> Can change the theme of the UI. Clicking <b>'Theme Previewer'</b> opens a new window showing all the available themes in effect. Cool</li>
+                <li><u>Theme:</u> Can change the theme of the UI. Clicking <b>'Themes Preview'</b> opens a new window showing all the available themes in effect. Cool</li>
             <ol>
         </p>
         <p>
