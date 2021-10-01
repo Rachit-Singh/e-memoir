@@ -3,6 +3,8 @@ from datetime import datetime
 import time
 import PySimpleGUI as sg
 import os
+import platform
+import getpass
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ### FUNCTIONALITIES
@@ -12,6 +14,17 @@ import os
 def read_settings(reset=False) :
     # reset arg is used when the settings need to be reset
     if reset or not os.path.exists("settings.json") or os.path.getsize("settings.json") == 0:
+        # searching the C:\Users\{username} directory in Windows and /home/{username} directory in Linux
+        # for the path of icon ico and png file
+        username = getpass.getuser()
+        paths = os.path.join(r"C:\Users",username) if platform.system()=="Windows" else os.path.join("/home",username)
+        for root, _, files in os.walk(paths):
+            for name in files :
+                if name == 'Diary-icon.png' :
+                    image_path = os.path.abspath(os.path.join(root, name))
+                elif name == 'icon.ico' :
+                    icon_path = os.path.abspath(os.path.join(root, name))
+
         settings = [
             {
                 "force_save" : False,
@@ -37,6 +50,10 @@ def read_settings(reset=False) :
             {
                 "theme" : "Dark",
                 "_comment_" : "theme of the GUI"
+            },
+            {
+                "icon_path" : icon_path,
+                "image_path" : image_path
             }
         ]
         with open("settings.json", "w") as f:
