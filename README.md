@@ -44,7 +44,7 @@ How amazing is that. Just open the app and start typing. Plus you can tweak the 
         <h4>Settings</h4>
         <center>
         <figure>
-        <img src="pictures\settings tab.jpg" alt="Settings Tab">
+        <img src="pictures\settings tab 1.jpg" alt="Settings Tab">
             <figcaption>Fig.4 - Settings Tab when there is no password set</figcaption>
         </figure>
         <figure>
