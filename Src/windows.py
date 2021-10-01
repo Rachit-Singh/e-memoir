@@ -11,6 +11,43 @@ import platform
 # WINDOWS
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+## CREATE A NEW WINDOW SHOWING ALL THE THEMES SUPPORTED
+def themes_preview_fn(theme_path):
+    columns = 12 #default input for the function.
+    #Body of the altered preview_all_look_and_feel_themes function
+
+    # Show a "splash" type message so the user doesn't give up waiting
+    sg.popup_quick_message('Hang on for a moment, this will take a bit to create....', background_color='red', text_color='#FFFFFF', auto_close=True, non_blocking=True)
+    web = False
+    win_bg = 'black'
+
+    def sample_layout():
+        return [[sg.Text('Text element'), sg.InputText('Input data here', size=(10, 1))],
+                [sg.Button('Ok'), sg.Button('Cancel'), sg.Slider((1, 10), orientation='h', size=(5, 15))]]
+
+    layout2 = [[sg.Text('Here is a complete list of themes', font='Default 18', background_color=win_bg)]]
+
+    names = sg.list_of_look_and_feel_values()
+    names.sort()
+    column_layout = [] #new list to make the column element
+    row = []
+    for count, theme in enumerate(names):
+        sg.change_look_and_feel(theme)
+        if not count % columns:
+            column_layout += [row] #rather than layout += [row]
+            row = []
+        row += [sg.Frame(theme, sample_layout() if not web else [[sg.T(theme)]] + sample_layout())]
+    if row:
+        column_layout += [row] #rather than layout += [row]
+
+    layout2 += [[sg.Column(column_layout, scrollable=True)]] #add column element
+    window2 = sg.Window('Preview of all Look and Feel choices', layout2, background_color=win_bg,
+                    resizable=True, icon=theme_path) 
+    window2.read()
+    window2.close()
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 ## LOGIN SCREEN THAT ASKS FOR PASSWORD 
 def loginWindow_fn(theme, password, settings) :
     sg.change_look_and_feel(theme)
@@ -22,7 +59,7 @@ def loginWindow_fn(theme, password, settings) :
                 [sg.Button('Login', button_color=('White', 'springgreen4')), sg.Button('Exit', button_color=('White', 'firebrick3'))]
             ]
     window3 = sg.Window('Login', layout, element_justification='c',
-                    resizable=True, icon=settings[6]['icon_path']) #make window resizable
+                    icon=settings[6]['icon_path']) 
     
     passed = False
     while True :
@@ -121,7 +158,7 @@ def change_password_fn(theme, settings) :
                 [sg.Button('Change', button_color=('White', 'springgreen4')), sg.Button('Cancel', button_color=('White', 'firebrick3'))]
             ]
     window3 = sg.Window('Change Password', layout, element_justification='c',
-                    resizable=True, icon=settings[6]['icon_path']) #make window resizable
+                    icon=settings[6]['icon_path']) 
     
     passed = False
     while True :
@@ -179,7 +216,7 @@ def remove_password_fn(theme, settings) :
             ]
 
     window3 = sg.Window('Remove Password', layout, element_justification='c',
-                    resizable=True, icon=settings[6]['icon_path']) #make window resizable
+                    icon=settings[6]['icon_path']) 
 
     passed = False
     while True :
@@ -217,7 +254,7 @@ def set_password_fn(theme, settings) :
             ]
 
     window3 = sg.Window('Set Password', layout, element_justification='c',
-                    resizable=True, icon=settings[6]['icon_path']) #make window resizable
+                    icon=settings[6]['icon_path']) 
 
     passed = False
     while True :

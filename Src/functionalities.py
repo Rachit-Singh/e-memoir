@@ -16,6 +16,7 @@ def read_settings(reset=False) :
     if reset or not os.path.exists("settings.json") or os.path.getsize("settings.json") == 0:
         # searching the C:\Users\{username} directory in Windows and /home/{username} directory in Linux
         # for the path of icon ico and png file
+        image_path, theme_path, icon_path = 'Diary-icon.png', 'themes.ico', 'icon.ico'
         username = getpass.getuser()
         paths = os.path.join(r"C:\Users",username) if platform.system()=="Windows" else os.path.join("/home",username)
         for root, _, files in os.walk(paths):
@@ -24,6 +25,8 @@ def read_settings(reset=False) :
                     image_path = os.path.abspath(os.path.join(root, name))
                 elif name == 'icon.ico' :
                     icon_path = os.path.abspath(os.path.join(root, name))
+                elif name == 'themes.ico' :
+                    theme_path = os.path.abspath(os.path.join(root, name))
 
         settings = [
             {
@@ -53,6 +56,7 @@ def read_settings(reset=False) :
             },
             {
                 "icon_path" : icon_path,
+                "theme_path" : theme_path,
                 "image_path" : image_path
             }
         ]
@@ -244,37 +248,3 @@ def update_settings(window, event, values, settings, temp_dic) :
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## CREATE A NEW WINDOW SHOWING ALL THE THEMES SUPPORTED
-def themes_preview_fn():
-    columns = 12 #default input for the function.
-    #Body of the altered preview_all_look_and_feel_themes function
-
-    # Show a "splash" type message so the user doesn't give up waiting
-    sg.popup_quick_message('Hang on for a moment, this will take a bit to create....', background_color='red', text_color='#FFFFFF', auto_close=True, non_blocking=True)
-    web = False
-    win_bg = 'black'
-
-    def sample_layout():
-        return [[sg.Text('Text element'), sg.InputText('Input data here', size=(10, 1))],
-                [sg.Button('Ok'), sg.Button('Cancel'), sg.Slider((1, 10), orientation='h', size=(5, 15))]]
-
-    layout2 = [[sg.Text('Here is a complete list of themes', font='Default 18', background_color=win_bg)]]
-
-    names = sg.list_of_look_and_feel_values()
-    names.sort()
-    column_layout = [] #new list to make the column element
-    row = []
-    for count, theme in enumerate(names):
-        sg.change_look_and_feel(theme)
-        if not count % columns:
-            column_layout += [row] #rather than layout += [row]
-            row = []
-        row += [sg.Frame(theme, sample_layout() if not web else [[sg.T(theme)]] + sample_layout())]
-    if row:
-        column_layout += [row] #rather than layout += [row]
-
-    layout2 += [[sg.Column(column_layout, scrollable=True)]] #add column element
-    window2 = sg.Window('Preview of all Look and Feel choices', layout2, background_color=win_bg,
-                    resizable=True, icon=os.path.join('Src', 'themes.ico')) #make window resizable
-    window2.read()
-    window2.close()

@@ -47,7 +47,7 @@ if __name__ == "__main__" :
 
         tabgrp = mainWindowLayout_fn(date_format, settings, temp_dic, have_password=True if password else False)
         #Define Window
-        window =sg.Window("E-Memoir",tabgrp, icon=os.path.join(os.path.dirname(__file__), 'icon.ico'))   
+        window =sg.Window("E-Memoir",tabgrp, icon=settings[6]['icon_path'])   
 
         while True:             # Event Loop
             event, values = window.Read()      
@@ -84,7 +84,7 @@ if __name__ == "__main__" :
 
             if event == "Themes Preview" :
                 # open a window with the theme preview
-                themes_preview_fn()
+                themes_preview_fn(settings[6]['theme_path'])
 
             if event == "Change Password" :
                 # open the change password window
