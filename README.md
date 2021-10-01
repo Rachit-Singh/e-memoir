@@ -1,6 +1,5 @@
 <h1>E-Memoir</h1>
-<p>Your own personal e-diary. Write memoirs, access and delete them anytime easily, and the best part, it has a GUI.
-How amazing is that. Just open the app and start typing. Plus you can tweak the app as per your liking.</p>
+<p>Your own personal e-diary. Write memoirs, access and delete them anytime easily, and the best part, it has a GUI and it all can be password protected just like any other app. How amazing is that. Just open the app and start typing. Plus you can tweak the app as per your liking.</p>
 
 <h3>Extremely intuitive</h3>
 <p>The GUI is extremely straight forward and designed keeping the non-techy folks in mind. Everyting is self-explanatory. An program can be run using the .exe file provided. As simple as that.</p>
