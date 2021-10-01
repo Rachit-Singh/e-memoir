@@ -80,7 +80,7 @@ How amazing is that. Just open the app and start typing. Plus you can tweak the 
         <img src="pictures\login window.jpg" alt="Login">
             <figcaption>Fig.7 - Login</figcaption>
         </figure>
-<p>Can set, change and remove password easily. Password set is hashed in the process to add an extra layer of security.
+<p>Can set, change and remove password easily. Password is hashed in the process to add an extra layer of security.
 <hline>
 <h3>Cross Platform</h3>
 <p>Will work on Windows/Mac/Linux</p>
