@@ -4,8 +4,8 @@
 block_cipher = None
 
 
-a = Analysis(['Src\\main.py'],
-             pathex=['C:\\Users\\ayush.kumar.a.singh\\Documents\\venv'],
+a = Analysis(['main.py'],
+             pathex=['C:\\Users\\ayush.kumar.a.singh\\Documents\\venv\\Src'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -37,4 +37,4 @@ exe = EXE(pyz,
           disable_windowed_traceback=False,
           target_arch=None,
           codesign_identity=None,
-          entitlements_file=None )
+          entitlements_file=None , icon='icon.ico')
