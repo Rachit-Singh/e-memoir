@@ -45,22 +45,27 @@ How amazing is that. Just open the app and start typing. Plus you can tweak the 
         <center>
         <figure>
         <img src="pictures\settings tab.jpg" alt="Settings Tab">
-            <figcaption>Fig.4 - Settings Tab</figcaption>
+            <figcaption>Fig.4 - Settings Tab when there is no password set</figcaption>
+        </figure>
+        <figure>
+        <img src="pictures\settings tab 2.jpg" alt="Settings Tab">
+            <figcaption>Fig.5 - Settings Tab when there is a password set</figcaption>
         </figure>
         <figure>
         <img src="pictures\theme previewer.jpg" alt="Themes Preview">
-            <figcaption>Fig.5 - Themes Preview</figcaption>
+            <figcaption>Fig.6 - Themes Preview</figcaption>
         </figure>
         </center>
         <p>Tweak the program as per your liking. Options available right now include:
             <ol>
-                <li><u>Force Save:</u> Enabling this will allow you to save the same memoir again for the same day. Not sure about the use case though.</li>
-                <li><u>Quit after saving the memoir:</u> Enabling this will terminate the program after a memoir is saved. There is a specified delay between saving the memoir and app being closed.</li>
-                <li><u>Delay (in sec):</u> Specify the delay. By default, it is set to 2sec. This is used only when the Quut after saving is enabled.</li>
-                <li><u>Date format:</u> The date format used for dates for tagging the memoirs. A single date format is used for the whole memoir. By default, it is set to '28-November-1999' format. If the format is changed, the change is made in all the dates for all the memoirs and the UI as well. Sweet.</li>
-                <li><u>Tab Selected color:</u> Color of the tab when it is selected. By default, it is Blue. A complete color palette is provided</li>
-                <li><u>Max records to display in preview:</u> Max number of records that are displayed in any preview. By default, it is set to 20.</li>
-                <li><u>Theme:</u> Can change the theme of the UI. Clicking <b>'Themes Preview'</b> opens a new window showing all the available themes in effect. Cool</li>
+                <li><u>Force Save:</u> Enabling this will allow you to save the same memoir again for the same day. Not sure about the use case though.
+                <li><u>Quit after saving the memoir:</u> Enabling this will terminate the program after a memoir is saved. There is a specified delay between saving the memoir and app being closed.
+                <li><u>Delay (in sec):</u> Specify the delay. By default, it is set to 2sec. This is used only when the Quut after saving is enabled.
+                <li><u>Date format:</u> The date format used for dates for tagging the memoirs. A single date format is used for the whole memoir. By default, it is set to '28-November-1999' format. If the format is changed, the change is made in all the dates for all the memoirs and the UI as well. Sweet.
+                <li><u>Tab Selected color:</u> Color of the tab when it is selected. By default, it is Blue. A complete color palette is provided.
+                <li><u>Max records to display in preview:</u> Max number of records that are displayed in any preview. By default, it is set to 20.
+                <li><u>Theme:</u> Can change the theme of the UI. Clicking <b>'Themes Preview'</b> opens a new window showing all the available themes in effect. Cool.
+                <li><u>Password:</u> Can set, change and delete password. When no password is set, a <b>'Set Password'</b> button is visible clicking which prompts you to set a new password. When a password is set, two other buttons are presented to change or delete the password. Very intuitive.
             <ol>
         </p>
         <p>
@@ -69,6 +74,13 @@ How amazing is that. Just open the app and start typing. Plus you can tweak the 
     </li>
 </ul>
 
+<hline>
+<h3>Password Protection</h3>
+      <figure>
+        <img src="pictures\login window.jpg" alt="Login">
+            <figcaption>Fig.7 - Login</figcaption>
+        </figure>
+<p>Can set, change and remove password easily. Password set is hashed in the process to add an extra layer of security.
 <hline>
 <h3>Cross Platform</h3>
 <p>Will work on Windows/Mac/Linux</p>
