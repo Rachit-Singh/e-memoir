@@ -48,7 +48,6 @@
         password: True
         hint_text: "Confirm Password"
 
-
 Screen:
     MDNavigationLayout:
         ScreenManager:
@@ -136,7 +135,7 @@ Screen:
                                 mode: "end"
                                 type: "bottom"
                                 icon: "exit-to-app"
-                                on_action_button: app.stop()
+                                on_action_button: app.confirm_exit()
                                 left_action_items: [["book", lambda x: app.nothing()]]
                         
 
@@ -155,9 +154,26 @@ Screen:
                         size_hint: (0.01, 0.01)
 
                     BoxLayout :
+                        size_hint: (0.9, 0.7)
+                        pos_hint: {'center_x':0.5, 'center_y':0.5}
                         orientation: "vertical"
-                        spacing: "50dp"
+                        spacing: "10dp"
+                        padding: "40dp"
 
+                        MDTextField :
+                            id: search_keyword
+                            text: ""
+                            hint_text: "Search by Keyword"
+                            pos_hint: {"center_x":0.5, "center_y":0.2}
+                            size_hint: (0.9, 0)
+                            color_mode: 'accent'
+                            icon_right: "brain"
+                            icon_right_color: app.theme_cls.primary_color
+
+                        MDLabel:
+                            text: "Search in Date Range"
+                            pos_hint: {"center_x":0.7, "center_y":0.5}
+                            
                         MDRaisedButton:
                             id: from_date_read
                             text: 'date_comes_here'
@@ -176,14 +192,14 @@ Screen:
                             on_release: app.read_memoir()
                             elevation_normal: 15
 
-                        MDBottomAppBar:
-                            MDToolbar:
-                                title: "E-Memoir"
-                                mode: "end"
-                                type: "bottom"
-                                icon: "exit-to-app"
-                                on_action_button: app.stop()
-                                left_action_items: [["book", lambda x: app.nothing()]]
+                    MDBottomAppBar:
+                        MDToolbar:
+                            title: "E-Memoir"
+                            mode: "end"
+                            type: "bottom"
+                            icon: "exit-to-app"
+                            on_action_button: app.confirm_exit()
+                            left_action_items: [["book", lambda x: app.nothing()]]
 
 
             Screen:
@@ -224,6 +240,7 @@ Screen:
 
                         MDFloatingActionButton:
                             icon: "delete"
+                            md_bg_color: (1, 0.2, 0.2, 1)
                             pos_hint: {"center_x": 0.5, "center_y": 0.5}
                             on_release: app.delete_memoir()
                             elevation_normal: 15
@@ -234,7 +251,7 @@ Screen:
                                 mode: "end"
                                 type: "bottom"
                                 icon: "exit-to-app"
-                                on_action_button: app.stop()
+                                on_action_button: app.confirm_exit()
                                 left_action_items: [["book", lambda x: app.nothing()]]
             
 
@@ -274,7 +291,7 @@ Screen:
                             mode: "end"
                             type: "bottom"
                             icon: "exit-to-app"
-                            on_action_button: app.stop()
+                            on_action_button: app.confirm_exit()
                             left_action_items: [["book", lambda x: app.nothing()]]
 
             Screen:
@@ -298,6 +315,7 @@ Screen:
                         
                     MDFloatingActionButton:
                         icon: "delete"
+                        md_bg_color: (1, 0.2, 0.2, 1)
                         pos_hint: {"center_x": 0.5, "center_y": 0.5}
                         on_release: app.deleteInRange_warning()
                         elevation_normal: 15
@@ -318,6 +336,40 @@ Screen:
                     ScrollView:
                         MDList:
                             id: reading_list_here
+
+            Screen:
+                name: "long_memoir_reading_screen"
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: "0dp"
+
+                    MDToolbar:
+                        title: "Memoir"
+                        elevation: 15
+                        left_action_items: [['arrow-left', lambda x: app.screen_change("reading_preview_screen")]]
+                    Widget :
+                        size_hint: (0.01, 0.01)
+
+                    BoxLayout:
+                        orientation: "vertical"
+                        padding: "20dp"
+                        spacing: "20dp"
+                        ScrollView:
+                            MDLabel:
+                                id: message_message_here
+                                #halign: "left"
+                                size_hint_y: None     # <<<<<<<<<<
+                                height: self.texture_size[1]
+                                text: ""
+                                markup: True
+                                pos_hint: {'center_x':0.5, 'center_y':0.8}
+
+                        MDFloatingActionButton:
+                            icon: "delete"
+                            md_bg_color: (1, 0.2, 0.2, 1)
+                            on_release: app.deletion_confirmation()
+                            pos_hint: {'center_x':0.5, 'center_y':0.5}
+
 
         MDNavigationDrawer:
             id: nav_drawer

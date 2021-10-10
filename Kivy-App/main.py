@@ -1,7 +1,13 @@
 from hashlib import sha256
+import re
+
 from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.scrollview import ScrollView
+from kivymd.uix import button
+from kivymd.uix.boxlayout import MDBoxLayout
 from kivy.core.window import Window
+from kivy.base import EventLoop
 
 from kivymd.app import MDApp
 from kivy.lang import Builder
@@ -13,18 +19,21 @@ from kivymd.uix.menu import MDDropdownMenu
 from kivy.storage.jsonstore import JsonStore
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.list import TwoLineIconListItem, IconLeftWidget
+from kivymd.toast import toast
 
+# Window.size = (360, 600)
 Window.softinput_mode = 'pan'
 todays_date = datetime.now()
 
-class SetPasswordDialogBox(BoxLayout) :
+class SetPasswordDialogBox(MDBoxLayout) :
     pass
 
-class RemovePasswordDialogBox(BoxLayout) :
+class RemovePasswordDialogBox(MDBoxLayout) :
     pass
 
-class ChangePasswordDialogBox(BoxLayout) :
+class ChangePasswordDialogBox(MDBoxLayout) :
     pass
+
 
 class EMemoirApp(MDApp):
     def __init__(self, **kwargs):
@@ -48,15 +57,91 @@ class EMemoirApp(MDApp):
             width_mult=10,
         )
 
+    def build(self):
+        self.icon = "Diary-icon.png"
+        return self.screen
+
+    def on_stop(self) :
+        # save the theme in the memoir-credentials file
+        store = JsonStore("memoir-credentials.json")
+        store.put("theme", primary_palette=self.theme_cls.primary_palette,
+        accent_palette= self.theme_cls.accent_palette, theme_style=self.theme_cls.theme_style)
+
+    def on_start(self):
+        EventLoop.window.bind(on_keyboard=self.hook_keyboard)
+
+        # set the theme if available
+        try :
+            store = JsonStore("memoir-credentials.json")
+            self.theme_cls.primary_palette = store.get("theme")["primary_palette"]
+            self.theme_cls.accent_palette = store.get("theme")["accent_palette"]
+            self.theme_cls.theme_style = store.get("theme")["theme_style"]
+        except :
+            pass
+
+        # remove the login screen if password is not there
+        try :
+            # if the key exists, password is set
+            _ = JsonStore("memoir-credentials.json").get("pwd")
+            password_present = True 
+        except :
+            password_present = False
+
+        if not password_present :
+            self.root.ids.screen_manager.remove_widget(
+                self.root.ids.screen_manager.children[0]
+            )
+            if datetime.now().hour < 12 :
+                toast("Good Morning")
+            elif datetime.now().hour > 12 and datetime.now().hour < 4 :
+                toast("Good Afternoon")
+            else :
+                toast("Good Evening")
+
+        self.root.ids.date_button.text = todays_date.strftime("%d-%m-%Y")
+        self.root.ids.from_date_read.text = f'FROM:  {todays_date.strftime("%d-%m-%Y")}'
+        self.root.ids.to_date_read.text = f'TO:  {todays_date.strftime("%d-%m-%Y")}'
+        self.root.ids.from_date_delete.text = f'FROM:  {todays_date.strftime("%d-%m-%Y")}'
+        self.root.ids.to_date_delete.text = f'TO:  {todays_date.strftime("%d-%m-%Y")}'
+
+        # create the password buttons dynamically
+        self.create_password_buttons(password_present)
+
+    def hook_keyboard(self, window, key, *largs):
+        # CHECK IF THE BACK BUTTON IS PRESSED AND IF YES, RETURN TO THE PREVIOUS SCREEN
+        cur_screen = self.root.ids.screen_manager.current
+        if key == 27:
+            if cur_screen == "long_memoir_reading_screen" :
+                self.screen_change("reading_preview_screen")
+            elif cur_screen == "reading_preview_screen" :
+                self.screen_change("read_screen")
+            elif cur_screen == "deletion_preview_screen" :
+                self.screen_change("delete_screen")
+            else :
+                self.confirm_exit()
+            # do what you want, return True for stopping the propagation
+            return True 
+            
     def nothing(self) :
         # does nothing
         pass
+    
+    def confirm_exit(self):
+        # asks for confirmation
+        self.dialog = MDDialog(title="Exit?", 
+        buttons=[MDRaisedButton(text="EXIT", on_release=self.stop, md_bg_color=(1, 0.2, 0.2, 1)),
+        MDRaisedButton(text="Cancel", on_release=self.close_dialogBox)])
+        self.dialog.open()
+        return True
 
     def menu_callback(self, text_item):
         self.root.ids.deletion_option.text = f"CRITERIA: {text_item}"
         self.menu.dismiss()
 
     def screen_change(self, screen):
+        if screen == "read_screen" :
+            # make the keyword textField blank
+            self.root.ids.search_keyword.text = ""
         # to change screens
         self.root.ids.screen_manager.current = screen
 
@@ -65,7 +150,13 @@ class EMemoirApp(MDApp):
         if sha256(password.encode()).hexdigest() == JsonStore("memoir-credentials.json").get("pwd")["value"] :
             # password matched
             self.root.ids.screen_manager.current = "write_screen"
-
+            # print a Welcome toast
+            if datetime.now().hour < 12 :
+                toast("Good Morning")
+            elif datetime.now().hour > 12 and datetime.now().hour < 4 :
+                toast("Good Afternoon")
+            else :
+                toast("Good Evening")
         else:
             dialog = MDDialog(title="Incorrect", text="Try again", md_bg_color=(1, 0.2, 0.2, 1))
             dialog.open()
@@ -97,8 +188,7 @@ class EMemoirApp(MDApp):
 
             # create the other 2 buttons
             self.create_password_buttons(password_present=True)
-            self.dialog = MDDialog(title="Password Saved", md_bg_color=(0.6,1,0.6,1))
-            self.dialog.open()
+            toast("Password Saved")
         else:
             MDDialog(title="Password mismatch", md_bg_color=(1, 0.2, 0.2, 1)).open()
 
@@ -130,8 +220,7 @@ class EMemoirApp(MDApp):
             # delete the 2 buttons and create the SET password button
             self.create_password_buttons(password_present=False)
 
-            MDDialog(title="Password Removed", md_bg_color=(0.6,1,0.6,1)).open()
-
+            toast("Password Removed")
         else :
             MDDialog(title="Incorrect Password", md_bg_color=(1, 0.2, 0.2, 1)).open()
 
@@ -164,54 +253,13 @@ class EMemoirApp(MDApp):
                 store.put("pwd", value=sha256(new_pwd.encode()).hexdigest())
                 self.dialog.dismiss()
 
-                MDDialog(title="Password Changed", md_bg_color=(0.6,1,0.6,1)).open()
+                toast("Password Changed")
             else :
                 MDDialog(title="Password Mismatch", md_bg_color=(1, 0.2, 0.2, 1)).open()
         else :
             MDDialog(title="Incorrect Password", md_bg_color=(1, 0.2, 0.2, 1)).open()
 
-    def build(self):
-        self.icon = "Diary-icon.png"
-        return self.screen
-
-    def on_stop(self) :
-        # save the theme in the memoir-credentials file
-        store = JsonStore("memoir-credentials.json")
-        store.put("theme", primary_palette=self.theme_cls.primary_palette,
-        accent_palette= self.theme_cls.accent_palette, theme_style=self.theme_cls.theme_style)
-
-    def on_start(self):
-        # set the theme if available
-        try :
-            store = JsonStore("memoir-credentials.json")
-            self.theme_cls.primary_palette = store.get("theme")["primary_palette"]
-            self.theme_cls.accent_palette = store.get("theme")["accent_palette"]
-            self.theme_cls.theme_style = store.get("theme")["theme_style"]
-        except :
-            pass
-
-        # remove the login screen if password is not there
-        try :
-            # if the key exists, password is set
-            _ = JsonStore("memoir-credentials.json").get("pwd")
-            password_present = True 
-        except :
-            password_present = False
-
-        if not password_present :
-            self.root.ids.screen_manager.remove_widget(
-                self.root.ids.screen_manager.children[0]
-            )
-
-        self.root.ids.date_button.text = todays_date.strftime("%d-%m-%Y")
-        self.root.ids.from_date_read.text = f'FROM:  {todays_date.strftime("%d-%m-%Y")}'
-        self.root.ids.to_date_read.text = f'TO:  {todays_date.strftime("%d-%m-%Y")}'
-        self.root.ids.from_date_delete.text = f'FROM:  {todays_date.strftime("%d-%m-%Y")}'
-        self.root.ids.to_date_delete.text = f'TO:  {todays_date.strftime("%d-%m-%Y")}'
-
-        # create the password buttons dynamically
-        self.create_password_buttons(password_present)
-
+    
     def create_password_buttons(self, password_present) :
         # to create password buttons in the settings screen
         self.root.ids.password_btns_layout.clear_widgets()
@@ -278,10 +326,7 @@ class EMemoirApp(MDApp):
                     message=msg)
             
             self.root.ids.memoir_textField.text = ""   # empty the textField
-            self.dialog = MDDialog(title = "Memoir saved successfully", 
-                              md_bg_color=(0.6,1,0.6,1),
-                              buttons=[MDFlatButton(text="OK", on_release=self.close_dialogBox)])
-            self.dialog.open()
+            toast("Memoir saved successfully")
 
         else :
             self.dialog = MDDialog(title = "Message field cannot be left empty", md_bg_color=(1, 0.2, 0.2, 1),
@@ -289,56 +334,97 @@ class EMemoirApp(MDApp):
             self.dialog.open()
 
     def read_memoir(self, second_time=False) :
-        # second time arg is there to be used when a record is deleted and there are no records left to read
-        # the screen needs to turn back to the read screen with the dialog box
-        from_date, to_date = datetime.strptime(self.root.ids.from_date_read.text[5:].strip(),"%d-%m-%Y"), datetime.strptime(self.root.ids.to_date_read.text[3:].strip(), "%d-%m-%Y")
-        # check if to_date < from_date
-        if from_date > to_date :
-            # return a dialog box with error
-            self.dialog = MDDialog(title="From_date can't be greater than To_date", text="Making them same.\nDone", md_bg_color=(1, 0.2, 0.2, 1),
-            buttons=[MDFlatButton(text="OK", on_release=self.close_dialogBox)])
-            self.dialog.open()
-            # make both same.
-            temp = self.root.ids.from_date_read.text[5:].strip()
-            self.root.ids.to_date_read.text = f'TO:  {temp}'
+        records_found = False
 
-        else :
-            # first remove the previous list
+        keyword = self.root.ids.search_keyword.text
+        # check if it is "SEARCH BY KEYWORD"
+        if keyword != "":
             self.root.ids.reading_list_here.clear_widgets()
-
-            # read the JSON file prepare the results
-            store = JsonStore("memoir.json")
-            records_found = False
+            store = JsonStore("memoir.json") 
             for key in store :
                 dic = store.get(key)
-                date = datetime.strptime(dic["date"], "%d-%m-%Y")
-                if date >= from_date and date <= to_date :
-                    # when a list item is clicked, open a dialog box
+                if re.search(keyword, dic["message"], re.IGNORECASE) :
                     list_item = TwoLineIconListItem(text=dic["message"], secondary_text=f"{dic['date']}   {dic['time']}",
                                                     on_release=self.reading_list_item_clicked)
                     list_item.add_widget(IconLeftWidget(icon="book"))
                     self.root.ids.reading_list_here.add_widget(list_item)
                     records_found = True
-            
-            if records_found :
-                # change screen 
-                self.screen_change("reading_preview_screen")
-            else :
-                if second_time :
-                    self.screen_change("read_screen")
-                self.dialog = MDDialog(title="No records found", buttons=[MDFlatButton(text="OK", on_release=self.close_dialogBox)])
+
+        # else find records in range
+        else :
+            # second time arg is there to be used when a record is deleted and there are no records left to read
+            # the screen needs to turn back to the read screen with the dialog box
+            from_date, to_date = datetime.strptime(self.root.ids.from_date_read.text[5:].strip(),"%d-%m-%Y"), datetime.strptime(self.root.ids.to_date_read.text[3:].strip(), "%d-%m-%Y")
+            # check if to_date < from_date
+            if from_date > to_date :
+                # return a dialog box with error
+                self.dialog = MDDialog(title="From_date can't be greater than To_date", text="Making them same.\nDone", md_bg_color=(1, 0.2, 0.2, 1),
+                buttons=[MDFlatButton(text="OK", on_release=self.close_dialogBox)])
                 self.dialog.open()
+                # make both same.
+                temp = self.root.ids.from_date_read.text[5:].strip()
+                self.root.ids.to_date_read.text = f'TO:  {temp}'
+
+            else :
+                # first remove the previous list
+                self.root.ids.reading_list_here.clear_widgets()
+
+                # read the JSON file prepare the results
+                store = JsonStore("memoir.json")
+                for key in store :
+                    dic = store.get(key)
+                    date = datetime.strptime(dic["date"], "%d-%m-%Y")
+                    if date >= from_date and date <= to_date :
+                        # when a list item is clicked, open a dialog box
+                        list_item = TwoLineIconListItem(text=dic["message"], secondary_text=f"{dic['date']}   {dic['time']}",
+                                                        on_release=self.reading_list_item_clicked)
+                        list_item.add_widget(IconLeftWidget(icon="book"))
+                        self.root.ids.reading_list_here.add_widget(list_item)
+                        records_found = True
+            
+        if records_found :
+            # change screen 
+            self.screen_change("reading_preview_screen")
+        else :
+            if second_time :
+                self.screen_change("read_screen")
+            toast("No records found")
+
 
     def reading_list_item_clicked(self, twolineiconlistitem) :
         self.reading_start_date, self.reading_start_time = twolineiconlistitem.secondary_text.split("   ")
         self.reading_message = twolineiconlistitem.text
-        self.dialog = MDDialog(text= f"Date: {self.reading_start_date}\nTime: {self.reading_start_time}\nMessage: {self.reading_message}", 
+        # check if it is searched by keyword or not
+        keyword = self.root.ids.search_keyword.text
+        
+        # if total_words (excluding newline characters) is more than 60, print the msg on new screen, else 
+        # print in the dialog box
+        if len(self.reading_message.replace("\n", "")) > 60:
+            if keyword != "" :
+                msg = re.sub(f"({keyword})", f"[color=#8B0000][b][u]\\1[/u][/b][/color]", self.reading_message, flags=re.IGNORECASE)
+                self.root.ids.message_message_here.text = f"Date: {self.reading_start_date}\nTime: {self.reading_start_time}\n\nMessage:\n{msg}"
+            else :
+                self.root.ids.message_message_here.text = f"Date: {self.reading_start_date}\nTime: {self.reading_start_time}\n\nMessage:\n{self.reading_message}"
+
+            # change the screen
+            self.root.ids.screen_manager.current = "long_memoir_reading_screen"
+       
+        else :
+            if keyword != "" :
+                msg = self.reading_message.replace(keyword, f"[color=#8B0000][b][u]{keyword}[/u][/b][/color]")
+                self.dialog = MDDialog(text= f"Date: {self.reading_start_date}\nTime: {self.reading_start_time}\nMessage: {msg}", 
                         buttons=[MDRaisedButton(text="DELETE", md_bg_color=(1, 0.2, 0.2, 1),
                         on_release=self.deletion_confirmation), 
                         MDRaisedButton(text="Close", on_release=self.close_dialogBox)])
-        self.dialog.open()
+            else :
+                self.dialog = MDDialog(text= f"Date: {self.reading_start_date}\nTime: {self.reading_start_time}\nMessage: {self.reading_message}", 
+                        buttons=[MDRaisedButton(text="DELETE", md_bg_color=(1, 0.2, 0.2, 1),
+                        on_release=self.deletion_confirmation), 
+                        MDRaisedButton(text="Close", on_release=self.close_dialogBox)])
 
-    def deletion_confirmation(self, obj) :
+            self.dialog.open()
+
+    def deletion_confirmation(self, obj=None) :
         # close the previous dialog box
         self.dialog.dismiss()
         self.dialog = MDDialog(title="Confirm?", 
@@ -358,7 +444,7 @@ class EMemoirApp(MDApp):
         self.dialog.dismiss()
         # run the read_memoir function again to refresh the list
         self.read_memoir(second_time=True)
-        MDDialog(title="Record deleted", md_bg_color=(0.6,1,0.6,1)).open()
+        toast("Record deleted")
 
     def delete_memoir(self) :
         store = JsonStore("memoir.json")
@@ -371,9 +457,7 @@ class EMemoirApp(MDApp):
                 self.dialog.open()
             else :
                 # if no records are found
-                self.dialog = MDDialog(text="No records found", 
-                buttons=[MDFlatButton(text="OK", on_release=self.close_dialogBox)])
-                self.dialog.open()
+                toast("No records found")
 
         else :
             # delete the records in range
@@ -401,9 +485,7 @@ class EMemoirApp(MDApp):
                     self.show_deletion_preview(row_data_deletion)
                 else :
                     # if no records are found
-                    self.dialog = MDDialog(title="No records found", 
-                    buttons=[MDFlatButton(text="OK", on_release=self.close_dialogBox)])
-                    self.dialog.open()
+                    toast("No records found")
 
     def close_dialogBox(self, obj) :
         self.dialog.dismiss()
@@ -416,9 +498,7 @@ class EMemoirApp(MDApp):
         # close the dialog box
         self.dialog.dismiss()
         # show a confirmation dialog box
-        self.dialog = MDDialog(title="All records deleted", 
-        md_bg_color=(0.6,1,0.6,1), buttons=[MDFlatButton(text="OK", on_release=self.close_dialogBox)])
-        self.dialog.open()
+        toast("All records deleted")
             
     def show_deletion_preview(self, row_data_deletion) :
         # delete the previous table first
@@ -449,9 +529,7 @@ class EMemoirApp(MDApp):
             buttons=[MDFlatButton(text="Cancel", on_release=self.close_dialogBox), 
             MDRaisedButton(text="DELETE", on_release=self.deleteInRange_confirmed)])
         else :
-            self.dialog = MDDialog(title="No record selected", md_bg_color=(1, 0.2, 0.2, 1),
-            buttons=[MDFlatButton(text="OK", on_release=self.close_dialogBox)])
-        self.dialog.open()
+            toast("No record selected")
 
     def deleteInRange_confirmed(self, obj) :
         # close the dialog box
@@ -468,9 +546,7 @@ class EMemoirApp(MDApp):
         self.screen_change("delete_screen")
 
         # show a confirmation dialog box
-        self.dialog = MDDialog(title=f"{len(records)} records deleted successfully", md_bg_color=(0.6,1,0.6,1),
-        buttons=[MDFlatButton(text="OK", on_release=self.close_dialogBox)])
-        self.dialog.open()
+        toast(f"{len(records)} records deleted successfully")
 
 
 EMemoirApp().run()
